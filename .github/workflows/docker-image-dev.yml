@@ -1,4 +1,4 @@
-name: TEST | Telegram Webhook Router
+name: DEV | Telegram Webhook Router
 
 on:
   push:
@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USER }}/telegram_webhook_router:test
+        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USER }}/telegram_webhook_router:dev
       - name: Login in DockerHub
         run: docker login -u ${{ secrets.DOCKER_USER }} --password ${{ secrets.DOCKER_PASS }}
       - name: Pushing docker image
-        run: docker push ${{ secrets.DOCKER_USER }}/telegram_webhook_router:test
+        run: docker push ${{ secrets.DOCKER_USER }}/telegram_webhook_router:dev
