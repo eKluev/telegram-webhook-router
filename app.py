@@ -34,6 +34,8 @@ def router():
 
     # build new link for route (other GET params redirected too)
     link = f"http://{get_params['route_ip']}:{get_params['route_port']}"
+    
+    # extra params
     i = 0
     for key, value in get_params.items():
         if key not in ['route_ip', 'route_port']:
@@ -42,11 +44,11 @@ def router():
 
     # make route
     try:
-        requests.post(url=link, json=request.get_json())
+        response = requests.post(url=link, json=request.get_json())
     except Exception as e:
         bugsnag.notify(e)
 
-    return Response(status=200)
+    return Response(status=response.status_code, content_type='application/json', response=response)
 
 
 # universal telegram webhook setter
@@ -63,9 +65,9 @@ def webhook_register():
            f"?max_connections={post_data['max_connections']}"\
            f"&drop_pending_updates={post_data['drop_pending_updates']}"\
            f"&url={router_url}/bot?params=route_ip={post_data['route_ip']},route_port={post_data['route_port']}{extra_params}"
-    result = requests.get(link)
+    response = requests.get(link)
 
-    return Response(status=200, content_type='application/json', response=result)
+    return Response(status=response.status_code, content_type='application/json', response=response)
 
 
 # universal telegram webhook deleter
@@ -73,7 +75,6 @@ def webhook_register():
 @validate(body=DeleteWebhook)
 def webhook_unregister():
     params = request.get_json()
-    result = requests.get(f"https://api.telegram.org/bot{params['telegram_token']}/deleteWebhook")
+    response = requests.get(f"https://api.telegram.org/bot{params['telegram_token']}/deleteWebhook")
 
-    return Response(status=200, content_type='application/json', response=result)
-
+    return Response(status=response.status_code, content_type='application/json', response=response)
