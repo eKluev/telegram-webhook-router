@@ -1,6 +1,8 @@
-FROM python:3.11
-WORKDIR /usr/src/app/
-COPY . /usr/src/app/
-RUN pip install -r requirements.txt
+FROM golang:1.22
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY *.go ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o /webhook-router
 EXPOSE 80
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]
+CMD ["/webhook-router"]
