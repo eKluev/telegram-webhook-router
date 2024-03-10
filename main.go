@@ -3,31 +3,29 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"net/http"
+	"webhook-router/handler"
 )
 
 func main() {
 	e := echo.New()
-	//e.Use(middleware.Logger())
+	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	//router_url := os.Getenv("THIS_SERVER_HTTPS_ADDRESS")
+	api := e.Group("", serverHeader)
+	api.GET("/", handler.Default)
+	api.POST("/bot", handler.Bot)
+	api.POST("/setWebhook", handler.SetWebhook)
+	api.POST("/deleteWebhook", handler.DeleteWebhook)
 
-	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, "webhook router 2.0")
-	})
+	err := e.Start(":80")
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+}
 
-	e.POST("/bot", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
-	})
-
-	e.POST("/setWebhook", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
-	})
-
-	e.POST("/deleteWebhook", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
-	})
-
-	e.Logger.Fatal(e.Start(":80"))
+func serverHeader(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		c.Response().Header().Set("x-version", "webhook-router/v2.0")
+		return next(c)
+	}
 }

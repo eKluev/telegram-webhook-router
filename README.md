@@ -1,4 +1,4 @@
-# Telegram Webhook Router 1.0
+# Telegram Webhook Router 2.0
 #### It routes telegram requests to required IP:PORT
 #### One SSL route for a couple of telegram bots.
 https://hub.docker.com/r/kluev/telegram_webhook_router
