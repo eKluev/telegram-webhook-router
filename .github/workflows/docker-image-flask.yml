@@ -1,8 +1,8 @@
-name: DEV | Telegram Webhook Router
+name: Flask | Telegram Webhook Router
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ flask-1.0 ]
 
 jobs:
   build:
@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USER }}/telegram_webhook_router:dev
+        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USER }}/telegram_webhook_router:dev-flask
       - name: Login in DockerHub
         run: docker login -u ${{ secrets.DOCKER_USER }} --password ${{ secrets.DOCKER_PASS }}
       - name: Pushing docker image
-        run: docker push ${{ secrets.DOCKER_USER }}/telegram_webhook_router:dev
+        run: docker push ${{ secrets.DOCKER_USER }}/telegram_webhook_router:dev-flask
