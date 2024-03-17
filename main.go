@@ -4,11 +4,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"webhook-router/handler"
+	"os"
 )
 
 func main() {
 	e := echo.New()
-	e.Use(middleware.Logger())
+	if os.Getenv("DEBUG") == "True"{
+		e.Use(middleware.Logger())
+	}
 	e.Use(middleware.Recover())
 
 	api := e.Group("", serverHeader)
